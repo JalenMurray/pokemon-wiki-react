@@ -1,6 +1,5 @@
 // UPDATE THIS AS MORE POKEMON ARE RELEASED
 export const MAX_COUNT = 1010;
-export const PAGE_SIZE = 200;
 
 const getJSON = async (path) => {
   const response = await fetch(path);
@@ -23,10 +22,12 @@ const cleanAbilities = (abilities) => {
   });
 };
 
-export const fetchAllPokemon = async () => {
+export const fetchAllPokemon = async ([min, max]) => {
   let allPokemon = [];
-  for (let id = 1; id <= 50; id++) {
-    allPokemon.push(await fetchPokemon(id));
+  for (let id = min; id <= max; id++) {
+    if (id <= MAX_COUNT) {
+      allPokemon.push(await fetchPokemon(id));
+    }
   }
   return allPokemon;
 };

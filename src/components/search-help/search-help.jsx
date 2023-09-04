@@ -6,6 +6,10 @@ const SearchHelp = ({ show, onHide }) => (
       <Modal.Title>Search Help</Modal.Title>
     </ModalHeader>
     <Modal.Body>
+      <p className="text-danger">
+        Search will only work on loaded pokemon, i.e those in current page. To search all you must load all, which has a
+        very long load time
+      </p>
       <ul>
         <li>
           Anywhere where a variable $X is shown, the variable is not case sensitive and you can include substrings.
