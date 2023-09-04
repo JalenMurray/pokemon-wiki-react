@@ -6,7 +6,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 import { Cards, LoadingSpinner } from './pokedex.styles';
 
 // Utils
-import { fetchAllPokemon } from '../../utils/pokemon';
+import { MAX_COUNT, fetchAllPokemon } from '../../utils/pokemon';
 import { searchPokemon } from '../../utils/search';
 
 // Components
@@ -63,6 +63,12 @@ const Pokedex = () => {
       {loading ? (
         <div className="row container-fluid">
           <div className="col-12 mt-4 text-center">
+            <h2 className="text-light">
+              Currently loading {MAX_COUNT} Pokémon! Please wait{' '}
+              <span role="img" aria-label="Smily Face">
+                😊
+              </span>
+            </h2>
             <LoadingSpinner />
           </div>
         </div>
