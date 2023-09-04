@@ -93,8 +93,6 @@ export const StatTitle = styled.h5`
 
 export const StatNumber = styled.p`
   font-size: 16px;
-  position: absolute;
-  margin-left: 70px;
   margin-top: 0;
   font-weight: bold;
 `;

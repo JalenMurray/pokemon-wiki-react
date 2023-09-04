@@ -1,8 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Fragment } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Routes
 import Home from './routes/home/home';
 import Pokedex from './routes/pokedex/pokedex';
+import Navigation from './routes/navigation/navigation';
+
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -24,8 +28,10 @@ function App() {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/pokedex" element={<Pokedex />} />
+          <Route path="/" element={<Navigation />}>
+            <Route index element={<Home />} />
+            <Route path="/pokedex" element={<Pokedex />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </Fragment>

@@ -1,6 +1,57 @@
+// UPDATE THIS AS MORE POKEMON ARE RELEASED
+export const MAX_COUNT = 1010;
+
+const getJSON = async (path) => {
+  const response = await fetch(path);
+  const json = response.json();
+  return json;
+};
+
 /* 
   Some Pokemon given by the pokeAPI have duplicate abilities, so this function will clean those pokemon's abilities
 */
+const cleanAbilities = (abilities) => {
+  let addedAbilities = {};
+  return abilities.filter((ability) => {
+    if (addedAbilities[ability.ability.name]) {
+      return false;
+    } else {
+      addedAbilities[ability.ability.name] = true;
+      return true;
+    }
+  });
+};
+
+export const fetchAllPokemon = async () => {
+  let allPokemon = [];
+  for (let id = 1; id <= MAX_COUNT; id++) {
+    allPokemon.push(await fetchPokemon(id));
+  }
+  return allPokemon;
+};
+
+export const fetchPokemon = async (id) => {
+  const pokemon = await getJSON(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  let entry = {
+    id: `${id}`,
+    name: pokemon.name,
+    speciesUrl: pokemon.species.url,
+    thumbnail: pokemon.sprites.other['official-artwork'].front_default,
+    sprite: pokemon.sprites.front_default,
+    abilities: cleanAbilities(pokemon.abilities),
+    types: [pokemon.types[0].type],
+    stats: [
+      { title: 'HP', stat: pokemon.stats[0].base_stat },
+      { title: 'Att', stat: pokemon.stats[1].base_stat },
+      { title: 'Def', stat: pokemon.stats[2].base_stat },
+      { title: 'SpAtt', stat: pokemon.stats[3].base_stat },
+      { title: 'SpDef', stat: pokemon.stats[4].base_stat },
+      { title: 'Speed', stat: pokemon.stats[5].base_stat },
+    ],
+  };
+  if (pokemon.types[1]) entry.types.push(pokemon.types[1].type);
+  return entry;
+};
 
 const formatId = (id) => {
   if (id < 10) return `#000${id}`;

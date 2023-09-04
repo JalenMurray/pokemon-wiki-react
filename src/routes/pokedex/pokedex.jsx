@@ -5,31 +5,14 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 // Styles
 import { Cards, LoadingSpinner } from './pokedex.styles';
 
+// Utils
+import { fetchAllPokemon } from '../../utils/pokemon';
+import { searchPokemon } from '../../utils/search';
+
 // Components
 import PokemonCard from '../../components/pokemon-card/pokemon-card';
 import SearchBox from '../../components/search-box/search-box';
 import SearchHelp from '../../components/search-help/search-help';
-
-// UPDATE THIS AS MORE POKEMON ARE RELEASED
-const MAX_COUNT = 1010;
-
-const cleanAbilities = (abilities) => {
-  let addedAbilities = {};
-  return abilities.filter((ability) => {
-    if (addedAbilities[ability.ability.name]) {
-      return false;
-    } else {
-      addedAbilities[ability.ability.name] = true;
-      return true;
-    }
-  });
-};
-
-async function getJSON(path) {
-  const response = await fetch(path);
-  const json = response.json();
-  return json;
-}
 
 const Pokedex = () => {
   // Loading Screen States
@@ -54,49 +37,8 @@ const Pokedex = () => {
     }
   };
 
-  const statCheck = ({ title, stat }, statQuery) => {
-    let split = statQuery.split(' ');
-    const [toCheckTitle, toCheckOperation, toCheckStat] = split;
-    // eslint-disable-next-line
-    if (title.toLowerCase() != toCheckTitle.toLowerCase()) {
-      return false;
-    }
-    switch (toCheckOperation) {
-      case '=':
-        // eslint-disable-next-line
-        return stat == toCheckStat;
-      case '>':
-        return stat > toCheckStat;
-      case '<':
-        return stat < toCheckStat;
-      case '>=':
-        return stat >= toCheckStat;
-      case '<=':
-        return stat <= toCheckStat;
-      default:
-        return false;
-    }
-  };
-
-  const searchPokemon = (pokemon) => {
-    switch (search.field) {
-      case 'id':
-        return pokemon.id.includes(search.value);
-      case 'name':
-        return pokemon.name.includes(search.value);
-      case 'type':
-        return pokemon.types.filter((type) => type.name.includes(search.value)).length;
-      case 'ability':
-        return pokemon.abilities.filter((ability) => ability.ability.name.includes(search.value)).length;
-      case 'stat':
-        return pokemon.stats.filter((statInfo) => statCheck(statInfo, search.value)).length;
-      default:
-        return pokemon.id.includes(search.value).length;
-    }
-  };
-
   const searchClickHandler = () => {
-    const newFilteredPokemon = allPokemon.filter((pokemon) => searchPokemon(pokemon));
+    const newFilteredPokemon = allPokemon.filter((pokemon) => searchPokemon(pokemon, search));
     setFilteredPokemon(newFilteredPokemon);
   };
 
@@ -105,29 +47,7 @@ const Pokedex = () => {
 
     // Pokedex Initialization
     const getAllPokemon = async () => {
-      let allPokemon = [];
-      for (let id = 1; id <= MAX_COUNT; id++) {
-        const pokemon = await getJSON(`https://pokeapi.co/api/v2/pokemon/${id}`);
-        let entry = {
-          id: `${id}`,
-          name: pokemon.name,
-          speciesUrl: pokemon.species.url,
-          thumbnail: pokemon.sprites.other['official-artwork'].front_default,
-          sprite: pokemon.sprites.front_default,
-          abilities: cleanAbilities(pokemon.abilities),
-          types: [pokemon.types[0].type],
-          stats: [
-            { title: 'HP', stat: pokemon.stats[0].base_stat },
-            { title: 'Att', stat: pokemon.stats[1].base_stat },
-            { title: 'Def', stat: pokemon.stats[2].base_stat },
-            { title: 'SpAtt', stat: pokemon.stats[3].base_stat },
-            { title: 'SpDef', stat: pokemon.stats[4].base_stat },
-            { title: 'Speed', stat: pokemon.stats[5].base_stat },
-          ],
-        };
-        if (pokemon.types[1]) entry.types.push(pokemon.types[1].type);
-        allPokemon.push(entry);
-      }
+      const allPokemon = await fetchAllPokemon();
       setLoading(false);
       setAllPokemon(allPokemon);
     };

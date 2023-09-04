@@ -26,7 +26,7 @@ const PokemonCard = ({ pokemon }) => {
   return (
     <Card
       bgcolor={getBgColor(types[0].name)}
-      className="container col-xs-12 col-sm-6 col-lg-4 col-xl-3 d-none d-md-block"
+      className="container col-xs-12 col-sm-6 col-lg-4 col-xl-3 d-none d-md-block text-dark"
     >
       <Header className="row mt-2">
         <Name className="col-9 ">{createHeader(id, name)}</Name>
@@ -54,9 +54,9 @@ const PokemonCard = ({ pokemon }) => {
         <div className="container-fluid col-9">
           {stats.map(({ title, stat }, i) => (
             <Stat key={i} className="row mt-1">
-              <StatTitle className="col-4">{title}</StatTitle>
-              <StatNumber>{stat}</StatNumber>
-              <StatBar barcolor={getBarColor(stat)} stat={stat} />
+              <StatTitle className="col-3">{title}</StatTitle>
+              <StatNumber className="col-1">{stat}</StatNumber>
+              <StatBar className="col-8" barcolor={getBarColor(stat)} stat={stat} />
             </Stat>
           ))}
         </div>
