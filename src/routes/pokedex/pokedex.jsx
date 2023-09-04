@@ -14,7 +14,7 @@ import PokemonCard from '../../components/pokemon-card/pokemon-card';
 import SearchBox from '../../components/search-box/search-box';
 import SearchHelp from '../../components/search-help/search-help';
 
-const PAGE_SIZE = 300;
+const PAGE_SIZE = 200;
 
 const Pokedex = () => {
   // Loading Screen States
